@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Pim's Pick 'N' Mix</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,900&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --yellow:#F9E87F; --yellow-light:#FDF5C0; --yellow-bg:#FAF0C0; --blue:#1C3FBD; }
-    html, body { max-width:100%; overflow-x:hidden; }
+    html, body { max-width:100%; overflow-x:hidden; touch-action:manipulation; }
     body { font-family:'DM Sans',sans-serif; background:var(--yellow-bg); min-height:100vh; }
 
     .cloud-bg { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
@@ -58,8 +58,7 @@
     .candy-card.selected{border-color:var(--blue);background:var(--yellow-light);box-shadow:0 4px 14px rgba(28,63,189,0.18);}
 
     .candy-img-wrap{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
-    .candy-img{width:100%;height:100%;object-fit:contain;will-change:transform;transition:transform 0.2s ease;}
-    .candy-card.selected .candy-img{transform:scale(1.1) rotate(-5deg);}
+    .candy-img{width:100%;height:100%;object-fit:contain;}
     .candy-emoji-fallback{font-size:36px;display:none;}
     .img-error .candy-img{display:none;}.img-error .candy-emoji-fallback{display:block;}
 
@@ -146,16 +145,16 @@ const PRICE_PER_LB = 15.99;
 const IMG = "images/";
 
 const CANDIES = [
-  {id:1,  name:"Sour Cola Pacifiers",      emoji:"🍬", img:IMG+"sour-cola-pacifiers.png",   badges:[{cls:"badge-free",label:"Gelatin & Palm oil free"},{cls:"badge-vegan",label:"Vegan"}], oz:0.5},
-  {id:2,  name:"Lemon Raspberry Skull",    emoji:"💀", img:IMG+"lemon-raspberry-skull.png",  badges:[{cls:"badge-free",label:"Gelatin free"},{cls:"badge-vegan",label:"Vegan"}], oz:0.45},
-  {id:3,  name:"Vanilla Fudge",            emoji:"🍮", img:IMG+"vanilla-fudge.jpg", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.55},
+  {id:1,  name:"Sour Cola Pacifiers",      emoji:"🍬", img:IMG+"sour-cola-pacifiers.webp",   badges:[{cls:"badge-free",label:"Gelatin & Palm oil free"},{cls:"badge-vegan",label:"Vegan"}], oz:0.5},
+  {id:2,  name:"Lemon Raspberry Skull",    emoji:"💀", img:IMG+"lemon-raspberry-skull.webp",  badges:[{cls:"badge-free",label:"Gelatin free"},{cls:"badge-vegan",label:"Vegan"}], oz:0.45},
+  {id:3,  name:"Vanilla Fudge",            emoji:"🍮", img:IMG+"vanilla-fudge.webp", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.55},
   {id:4,  name:"Lonka Soft Bite Karamell", emoji:"🍮", img:IMG+"lonka-karamell.webp", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.5},
-  {id:5,  name:"Cola Bottle",              emoji:"🥤", img:IMG+"cola-bottle.png",  badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.45},
-  {id:6,  name:"S-Mark Super Sour",        emoji:"🍭", img:IMG+"smark-super-sour.jpg", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.4},
+  {id:5,  name:"Cola Bottle",              emoji:"🥤", img:IMG+"cola-bottle.webp",  badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.45},
+  {id:6,  name:"S-Mark Super Sour",        emoji:"🍭", img:IMG+"smark-super-sour.webp", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.4},
   {id:7,  name:"S-Mark Sour Lemon Rasp",   emoji:"🍋", img:IMG+"smark-sour-lemon-rasp.webp", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.4},
-  {id:8,  name:"Real Swedish Fish",        emoji:"🐟", img:IMG+"swedish-fish.png", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.5},
+  {id:8,  name:"Real Swedish Fish",        emoji:"🐟", img:IMG+"swedish-fish.webp", badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.5},
   {id:9,  name:"Ahlgrens Cars",            emoji:"🚗", img:IMG+"ahlgrens-cars.webp",  badges:[{cls:"badge-natural",label:"Natural flavors"}], oz:0.5},
-  {id:10, name:"Aroma Raspberry Jellies",  emoji:"🫐", img:IMG+"aroma-raspberry-jellies.png", badges:[{cls:"badge-free",label:"Gluten/dairy/nut free"},{cls:"badge-natural",label:"Natural"}], oz:0.35},
+  {id:10, name:"Aroma Raspberry Jellies",  emoji:"🫐", img:IMG+"aroma-raspberry-jellies.webp", badges:[{cls:"badge-free",label:"Gluten/dairy/nut free"},{cls:"badge-natural",label:"Natural"}], oz:0.35},
   {id:11, name:"Raspberry Boats",          emoji:"🍓", img:IMG+"raspberry-boats.webp", badges:[{cls:"badge-free",label:"Gluten free"}], oz:0.4},
   {id:12, name:"Tutti Frutti Diamonds",    emoji:"💎", img:IMG+"tutti-frutti-diamonds.webp", badges:[{cls:"badge-free",label:"Gelatin free"},{cls:"badge-vegan",label:"Vegan"}], oz:0.4},
 ];
