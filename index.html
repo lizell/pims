@@ -81,7 +81,8 @@
 
     footer{text-align:center;padding:20px 0 0;color:var(--blue);opacity:0.5;font-size:11px;line-height:1.7;}
 
-    .bag-bar{position:fixed;bottom:0;left:0;right:0;background:var(--blue);color:white;padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:100;box-shadow:0 -4px 20px rgba(28,63,189,0.25);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+    .bag-bar{position:fixed;bottom:0;left:0;right:0;background:var(--blue);color:white;z-index:100;box-shadow:0 -4px 20px rgba(28,63,189,0.25);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+    .bag-bar-inner{max-width:680px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px;}
     .bag-bar.visible{transform:translateY(0);}
     .bag-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;}
     .bag-weight{font-family:'Fraunces',serif;font-size:26px;font-weight:900;line-height:1;}
@@ -96,7 +97,8 @@
     .bag-icon{width:38px;height:44px;flex-shrink:0;cursor:pointer;}
 
     /* Checkout overlay */
-    .checkout-overlay{position:fixed;inset:0;z-index:200;background:var(--yellow-bg);overflow-y:auto;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.2,0.64,1);padding:0 16px 40px;}
+    .checkout-overlay{position:fixed;inset:0;z-index:200;background:var(--yellow-bg);overflow-y:auto;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.2,0.64,1);}
+    .checkout-overlay>.co-header,.checkout-overlay>.co-content,.checkout-overlay>.co-done{max-width:680px;margin:0 auto;padding-left:16px;padding-right:16px;}
     .checkout-overlay.open{transform:translateY(0);}
     .co-header{display:flex;align-items:center;padding:16px 0;gap:12px;}
     .co-back{background:none;border:2px solid var(--blue);color:var(--blue);border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -107,7 +109,10 @@
     .co-item-img{width:44px;height:44px;object-fit:contain;border-radius:8px;}
     .co-item-name{flex:1;font-weight:600;font-size:13px;color:var(--blue);}
     .co-item-qty{font-family:'Fraunces',serif;font-weight:900;font-size:14px;color:var(--blue);opacity:0.6;}
-    .co-total{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:2px solid var(--blue);}
+    .co-line{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:var(--blue);}
+    .co-line-label{opacity:0.6;}
+    .co-line-value{font-weight:700;}
+    .co-total{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;margin-top:6px;border-top:2px solid var(--blue);}
     .co-total-label{font-weight:700;font-size:13px;color:var(--blue);}
     .co-total-price{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--blue);}
     .co-total-weight{font-size:11px;color:var(--blue);opacity:0.5;text-align:right;margin-top:2px;}
@@ -167,6 +172,7 @@
   </footer>
 </div>
 <div class="bag-bar" id="bagBar">
+<div class="bag-bar-inner">
   <svg class="bag-icon" onclick="if(confirm('Empty your bag?'))clearBag()" viewBox="0 0 38 44" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M6 14 C6 12 8 10 10 10 L28 10 C30 10 32 12 32 14 L30 40 C30 42 28 43 26 43 L12 43 C10 43 8 42 8 40 Z" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
     <path d="M13 10 C13 5 15 2 19 2 C23 2 25 5 25 10" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
@@ -179,6 +185,7 @@
   <div class="bag-spacer"></div>
   <button class="checkout-btn" onclick="checkout()">Checkout</button>
 </div>
+</div>
 <div class="checkout-overlay" id="checkoutOverlay">
   <div class="co-header">
     <button class="co-back" onclick="closeCheckout()">&#8592;</button>
@@ -186,6 +193,9 @@
   </div>
   <div class="co-content" id="coContent">
     <ul class="co-items" id="coItems"></ul>
+    <div class="co-line"><span class="co-line-label">Subtotal</span><span class="co-line-value" id="coSubtotal"></span></div>
+    <div class="co-line"><span class="co-line-label">Shipping</span><span class="co-line-value" id="coShipping"></span></div>
+    <div class="co-line"><span class="co-line-label">Tax (7%)</span><span class="co-line-value" id="coTax"></span></div>
     <div class="co-total">
       <span class="co-total-label">Total</span>
       <div><div class="co-total-price" id="coPrice"></div><div class="co-total-weight" id="coWeight"></div></div>
@@ -316,8 +326,14 @@ function checkout() {
     li.innerHTML = `<img class="co-item-img" src="${c.img}" alt="${c.name}"/><span class="co-item-name">${c.name}</span><span class="co-item-qty">${bag[c.id]}×</span>`;
     list.appendChild(li);
   });
-  const lbs = oz/16, price = lbs * PRICE_PER_LB;
-  document.getElementById('coPrice').textContent = `$${price.toFixed(2)}`;
+  const lbs = oz/16, subtotal = lbs * PRICE_PER_LB;
+  const shipping = subtotal > 0 ? 5.99 : 0;
+  const tax = (subtotal + shipping) * 0.07;
+  const total = subtotal + shipping + tax;
+  document.getElementById('coSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById('coShipping').textContent = `$${shipping.toFixed(2)}`;
+  document.getElementById('coTax').textContent = `$${tax.toFixed(2)}`;
+  document.getElementById('coPrice').textContent = `$${total.toFixed(2)}`;
   document.getElementById('coWeight').textContent = `${lbs.toFixed(2)} lbs`;
   document.getElementById('coContent').classList.remove('hidden');
   document.getElementById('coDone').classList.remove('show');
