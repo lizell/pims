@@ -94,6 +94,15 @@
     .checkout-btn{background:var(--yellow);border:none;color:var(--blue);border-radius:10px;padding:7px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
     .checkout-btn:active{background:var(--yellow-light);}
 
+    /* Favorite bag */
+    .fav-btn{background:rgba(255,255,255,0.14);border:2px solid rgba(255,255,255,0.25);color:white;border-radius:10px;padding:7px 11px;font-size:16px;cursor:pointer;flex-shrink:0;transition:background 0.15s,transform 0.15s;line-height:1;}
+    .fav-btn:active{background:rgba(255,255,255,0.28);transform:scale(0.92);}
+    .fav-btn.has-fav{color:var(--yellow);}
+
+    /* Toast */
+    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(28,63,189,0.95);color:white;border-radius:999px;padding:8px 18px;font-size:13px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.2s,transform 0.2s;z-index:300;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
     .bag-icon{width:38px;height:44px;flex-shrink:0;cursor:pointer;}
 
     /* Checkout overlay */
@@ -200,9 +209,11 @@
   <div class="bag-divider"></div>
   <div><div class="price-big" id="bagPrice">$0.00</div><div class="price-rate">$15.99 / lb</div></div>
   <div class="bag-spacer"></div>
+  <button class="fav-btn" id="favBtn" onclick="toggleFavorite()" title="Save as favorite">⭐</button>
   <button class="checkout-btn" onclick="checkout()">Checkout</button>
 </div>
 </div>
+<div class="toast" id="toast"></div>
 <div class="checkout-overlay" id="checkoutOverlay">
   <div class="co-content" id="coContent">
     <div class="co-hero">
@@ -405,7 +416,72 @@ function mockPay() {
   setTimeout(() => { closeCheckout(); clearBag(); }, 5000);
 }
 
+// ── FAVORITE BAG ──
+const FAV_KEY = 'pims_favorite_bag';
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function updateFavBtn() {
+  const saved = localStorage.getItem(FAV_KEY);
+  const btn = document.getElementById('favBtn');
+  if (saved) {
+    btn.classList.add('has-fav');
+    btn.title = 'Load favorite or hold to save new';
+  } else {
+    btn.classList.remove('has-fav');
+    btn.title = 'Save as favorite';
+  }
+}
+
+function toggleFavorite() {
+  const saved = localStorage.getItem(FAV_KEY);
+  const currentItems = Object.entries(bag).filter(([,v]) => v > 0);
+
+  if (saved) {
+    // Has saved fav: if current bag is empty or different → load fav, else save new
+    const favBag = JSON.parse(saved);
+    const isSame = JSON.stringify(favBag) === JSON.stringify(
+      Object.fromEntries(currentItems.map(([k,v]) => [k, v]))
+    );
+    if (currentItems.length === 0 || isSame) {
+      // Load favorite
+      clearBag();
+      Object.entries(favBag).forEach(([id, qty]) => {
+        if (qty > 0) {
+          bag[id] = qty;
+          const el = document.getElementById('qty-' + id);
+          if (el) el.textContent = qty;
+          const card = document.getElementById('card-' + id);
+          if (card) card.classList.add('selected');
+        }
+      });
+      updateBag();
+      showToast('⭐ Favorite bag loaded!');
+    } else {
+      // Save current as new favorite
+      const snapshot = Object.fromEntries(currentItems);
+      localStorage.setItem(FAV_KEY, JSON.stringify(snapshot));
+      updateFavBtn();
+      showToast('⭐ Saved as new favorite!');
+    }
+  } else {
+    // No saved fav yet — save current
+    if (currentItems.length === 0) { showToast('Add some candy first!'); return; }
+    const snapshot = Object.fromEntries(currentItems);
+    localStorage.setItem(FAV_KEY, JSON.stringify(snapshot));
+    updateFavBtn();
+    showToast('⭐ Favorite saved!');
+  }
+}
+
 buildGrid();
+updateFavBtn();
 </script>
 </body>
 </html>
