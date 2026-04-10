@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pim's Pick 'N' Mix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #F9E87F;
+      --yellow-light: #FDF3B0;
+      --blue: #1C3FBD;
+      --blue-dark: #152E99;
+      --white: #FFFFFF;
+      --cloud: rgba(255,255,255,0.85);
+      --price-per-lb: 14.99;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--yellow);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── CLOUDS ── */
+    .cloud-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .cloud {
+      position: absolute;
+      background: var(--cloud);
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: 0.7;
+    }
+    .cloud::before, .cloud::after {
+      content: ''; position: absolute; background: var(--cloud); border-radius: 50%;
+    }
+    .c1 { width: 180px; height: 80px; top: 5%; left: -4%; animation: drift 22s linear infinite; }
+    .c1::before { width: 100px; height: 90px; top: -40px; left: 20px; }
+    .c1::after  { width: 80px;  height: 70px; top: -25px; left: 80px; }
+    .c2 { width: 220px; height: 90px; top: 12%; right: 5%; animation: drift 30s linear infinite 5s; }
+    .c2::before { width: 120px; height: 100px; top: -50px; left: 30px; }
+    .c2::after  { width: 90px;  height: 80px;  top: -30px; left: 110px; }
+    .c3 { width: 150px; height: 65px; top: 40%; left: 2%; animation: drift 25s linear infinite 10s; }
+    .c3::before { width: 80px; height: 75px; top: -35px; left: 15px; }
+    .c3::after  { width: 70px; height: 60px; top: -20px; left: 65px; }
+    .c4 { width: 200px; height: 80px; top: 65%; right: 3%; animation: drift 28s linear infinite 3s; }
+    .c4::before { width: 110px; height: 90px; top: -45px; left: 25px; }
+    .c4::after  { width: 85px;  height: 75px; top: -28px; left: 100px; }
+    .c5 { width: 140px; height: 60px; top: 85%; left: 15%; animation: drift 20s linear infinite 8s; }
+    .c5::before { width: 75px; height: 70px; top: -32px; left: 12px; }
+    .c5::after  { width: 65px; height: 55px; top: -18px; left: 60px; }
+
+    @keyframes drift {
+      0%   { transform: translateX(0)   translateY(0); }
+      25%  { transform: translateX(15px) translateY(-8px); }
+      50%  { transform: translateX(25px) translateY(0); }
+      75%  { transform: translateX(10px) translateY(8px); }
+      100% { transform: translateX(0)   translateY(0); }
+    }
+
+    /* ── LAYOUT ── */
+    .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 48px 0 32px;
+      animation: fadeDown 0.8s ease both;
+    }
+    .logo-lockup {
+      display: inline-flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .logo-text {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(56px, 10vw, 96px);
+      font-weight: 900;
+      font-style: italic;
+      color: var(--blue);
+      line-height: 0.9;
+      letter-spacing: -2px;
+      text-shadow: 3px 3px 0 rgba(28,63,189,0.15);
+    }
+    .logo-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(12px, 2vw, 17px);
+      letter-spacing: 0.22em;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .tagline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(16px, 3vw, 22px);
+      font-weight: 700;
+      color: var(--blue);
+      margin-top: 16px;
+      opacity: 0.75;
+    }
+
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+      margin: 0 0 48px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+    .step {
+      background: var(--blue);
+      color: var(--yellow);
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .step-num {
+      background: var(--yellow);
+      color: var(--blue);
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 900;
+    }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── CANDY GRID ── */
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 900;
+      color: var(--blue);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .candy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 14px;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .candy-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px 12px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      box-shadow: 0 2px 8px rgba(28,63,189,0.08);
+      border: 3px solid transparent;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .candy-card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(28,63,189,0.15);
+    }
+    .candy-card.selected {
+      border-color: var(--blue);
+      background: var(--yellow-light);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(28,63,189,0.2);
+    }
+    .candy-emoji {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 8px;
+      transition: transform 0.2s ease;
+    }
+    .candy-card:hover .candy-emoji,
+    .candy-card.selected .candy-emoji {
+      transform: scale(1.2) rotate(-5deg);
+    }
+    .candy-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--blue);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .candy-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--blue);
+      border-radius: 999px;
+      padding: 2px 8px;
+      display: inline-block;
+      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+    }
+    .candy-badge.sour  { background: #e8a900; }
+    .candy-badge.fruity{ background: #d44f7e; }
+    .candy-badge.licorice{ background: #2a2a2a; }
+    .candy-badge.foam  { background: #5baf6f; }
+    .candy-badge.caramel{ background: #b06d1e; }
+    .candy-badge.chocolate{ background: #6b3a1f; }
+
+    /* qty control inside card */
+    .qty-control {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 4px;
+    }
+    .qty-btn {
+      width: 28px; height: 28px;
+      border: 2px solid var(--blue);
+      background: white;
+      color: var(--blue);
+      border-radius: 50%;
+      font-size: 18px; font-weight: 900;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+      line-height: 1;
+    }
+    .qty-btn:hover { background: var(--blue); color: white; }
+    .qty-num {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--blue);
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* ── STICKY BAG ── */
+    .bag-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--blue);
+      color: white;
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      gap: 12px;
+      z-index: 100;
+      box-shadow: 0 -4px 24px rgba(28,63,189,0.25);
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bag-bar.visible { transform: translateY(0); }
+
+    .bag-info {
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .bag-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7;
+    }
+    .bag-weight {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(22px, 5vw, 34px);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .bag-weight span {
+      font-size: 0.55em; font-weight: 600; opacity: 0.75; margin-left: 2px;
+    }
+
+    .bag-price-wrap {
+      text-align: center;
+    }
+    .price-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+    .price-big {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 900;
+      color: var(--yellow);
+      line-height: 1;
+    }
+    .price-rate { font-size: 11px; opacity: 0.65; margin-top: 2px; }
+
+    .bag-contents {
+      flex: 1; min-width: 160px;
+    }
+    .bag-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .bag-chip {
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+      animation: popIn 0.25s ease both;
+    }
+    @keyframes popIn { from { opacity:0; transform:scale(0.6); } to { opacity:1; transform:scale(1); } }
+
+    .clear-btn {
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .clear-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── NATURAL BADGE ── */
+    .natural-banner {
+      margin: 48px 0 32px;
+      background: var(--blue);
+      border-radius: 24px;
+      padding: 24px 32px;
+      color: white;
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.6s both;
+    }
+    .natural-icon { font-size: 40px; flex-shrink: 0; }
+    .natural-text h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 20px; font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .natural-text p { font-size: 13px; opacity: 0.8; line-height: 1.5; }
+    .natural-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    }
+    .natural-pill {
+      background: rgba(249,232,127,0.2);
+      border: 1px solid rgba(249,232,127,0.4);
+      color: var(--yellow);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-bag {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--blue);
+      opacity: 0.4;
+    }
+    .empty-bag .big-icon { font-size: 64px; margin-bottom: 12px; }
+    .empty-bag p { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 40px 0 120px;
+      color: var(--blue);
+      opacity: 0.6;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .candy-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .candy-card { padding: 12px 8px 10px; border-radius: 16px; }
+      .candy-emoji { font-size: 32px; }
+      .bag-bar { padding: 12px 16px; }
+      .bag-contents { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cloud-bg">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="cloud c4"></div>
+    <div class="cloud c5"></div>
+  </div>
+
+  <div class="page">
+
+    <header>
+      <div class="logo-lockup">
+        <div class="logo-text">Pim's</div>
+        <div class="logo-sub">Pick 'N' Mix</div>
+      </div>
+      <p class="tagline">Swedish candy – a healthier choice 🍬</p>
+    </header>
+
+    <div class="steps">
+      <div class="step"><span class="step-num">1</span> Grab a bag &amp; scoop</div>
+      <div class="step"><span class="step-num">2</span> Choose your mix below</div>
+      <div class="step"><span class="step-num">3</span> Weighed &amp; priced at checkout</div>
+    </div>
+
+    <p class="section-title">Build Your Mix</p>
+
+    <div class="candy-grid" id="candyGrid">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="natural-banner">
+      <div class="natural-icon">🌿</div>
+      <div class="natural-text">
+        <h3>Only Natural Flavors &amp; Colors</h3>
+        <p>Every piece in Pim's Pick 'N' Mix is made with carefully selected, high-quality ingredients.</p>
+        <div class="natural-pills">
+          <span class="natural-pill">No Red 40</span>
+          <span class="natural-pill">No Yellow 5</span>
+          <span class="natural-pill">No GMO</span>
+          <span class="natural-pill">No Parabens</span>
+          <span class="natural-pill">No Artificial Colors</span>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Pim's Pick 'N' Mix — 4020 NW 24th Terrace, 33431 Boca Raton, Florida<br>
+      Charlotte Nyman: 239-427-6236 &nbsp;|&nbsp; Viktor Nyman: 561-970-4293
+    </footer>
+
+  </div>
+
+  <!-- Sticky Bag Bar -->
+  <div class="bag-bar" id="bagBar">
+    <div class="bag-info">
+      <div class="bag-label">Your bag</div>
+      <div class="bag-weight" id="bagWeight">0.00 <span>lbs</span></div>
+    </div>
+
+    <div class="bag-contents">
+      <div class="bag-chips" id="bagChips"></div>
+    </div>
+
+    <div class="bag-price-wrap">
+      <div class="price-label">Total</div>
+      <div class="price-big" id="bagPrice">$0.00</div>
+      <div class="price-rate">$14.99 / lb</div>
+    </div>
+
+    <button class="clear-btn" onclick="clearBag()">Clear bag</button>
+  </div>
+
+  <script>
+    const PRICE_PER_LB = 14.99;
+
+    const CANDIES = [
+      { id: 1,  name: "Swedish Fish",         emoji: "🐟", badge: "fruity",    badge_label: "Fruity",    oz: 0.5 },
+      { id: 2,  name: "Lingonberry Hearts",   emoji: "❤️",  badge: "fruity",    badge_label: "Fruity",    oz: 0.4 },
+      { id: 3,  name: "Sour Gummy Worms",     emoji: "🐛", badge: "sour",      badge_label: "Sour",      oz: 0.6 },
+      { id: 4,  name: "Salty Licorice Coins", emoji: "🖤", badge: "licorice",  badge_label: "Licorice",  oz: 0.35},
+      { id: 5,  name: "Foam Strawberries",    emoji: "🍓", badge: "foam",      badge_label: "Foam",      oz: 0.3 },
+      { id: 6,  name: "Mango Ribbons",        emoji: "🥭", badge: "fruity",    badge_label: "Fruity",    oz: 0.45},
+      { id: 7,  name: "Soft Caramels",        emoji: "🍮", badge: "caramel",   badge_label: "Caramel",   oz: 0.55},
+      { id: 8,  name: "Raspberry Drops",      emoji: "🫐", badge: "fruity",    badge_label: "Fruity",    oz: 0.4 },
+      { id: 9,  name: "Cola Bottles",         emoji: "🥤", badge: "sour",      badge_label: "Sour",      oz: 0.5 },
+      { id: 10, name: "Licorice Twists",      emoji: "🌀", badge: "licorice",  badge_label: "Licorice",  oz: 0.45},
+      { id: 11, name: "Peach Rings",          emoji: "🍑", badge: "fruity",    badge_label: "Fruity",    oz: 0.5 },
+      { id: 12, name: "Foam Bananas",         emoji: "🍌", badge: "foam",      badge_label: "Foam",      oz: 0.3 },
+      { id: 13, name: "Watermelon Slices",    emoji: "🍉", badge: "fruity",    badge_label: "Fruity",    oz: 0.55},
+      { id: 14, name: "Sour Apple Bites",     emoji: "🍏", badge: "sour",      badge_label: "Sour",      oz: 0.4 },
+      { id: 15, name: "Toffee Chews",         emoji: "🟤", badge: "caramel",   badge_label: "Caramel",   oz: 0.5 },
+      { id: 16, name: "Blueberry Bears",      emoji: "🫐", badge: "fruity",    badge_label: "Fruity",    oz: 0.35},
+      { id: 17, name: "Salted Licorice Cats", emoji: "🐱", badge: "licorice",  badge_label: "Licorice",  oz: 0.4 },
+      { id: 18, name: "Lemon Sours",          emoji: "🍋", badge: "sour",      badge_label: "Sour",      oz: 0.4 },
+    ];
+
+    // qty map: id -> count
+    const bag = {};
+
+    function renderGrid() {
+      const grid = document.getElementById('candyGrid');
+      grid.innerHTML = '';
+      CANDIES.forEach(c => {
+        const qty = bag[c.id] || 0;
+        const card = document.createElement('div');
+        card.className = 'candy-card' + (qty > 0 ? ' selected' : '');
+        card.innerHTML = `
+          <span class="candy-emoji">${c.emoji}</span>
+          <div class="candy-name">${c.name}</div>
+          <span class="candy-badge ${c.badge}">${c.badge_label}</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(${c.id}, -1, event)">−</button>
+            <span class="qty-num">${qty}</span>
+            <button class="qty-btn" onclick="changeQty(${c.id}, +1, event)">+</button>
+          </div>
+        `;
+        card.addEventListener('click', (e) => {
+          // only if click is NOT on qty buttons
+          if (!e.target.classList.contains('qty-btn')) {
+            changeQty(c.id, 1);
+          }
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function changeQty(id, delta, e) {
+      if (e) e.stopPropagation();
+      bag[id] = Math.max(0, (bag[id] || 0) + delta);
+      updateBag();
+      renderGrid();
+    }
+
+    function clearBag() {
+      Object.keys(bag).forEach(k => delete bag[k]);
+      updateBag();
+      renderGrid();
+    }
+
+    function updateBag() {
+      let totalOz = 0;
+      CANDIES.forEach(c => {
+        const qty = bag[c.id] || 0;
+        totalOz += qty * c.oz;
+      });
+
+      const totalLbs = totalOz / 16;
+      const totalPrice = totalLbs * PRICE_PER_LB;
+
+      document.getElementById('bagWeight').innerHTML = `${totalLbs.toFixed(2)} <span>lbs</span>`;
+      document.getElementById('bagPrice').textContent = `$${totalPrice.toFixed(2)}`;
+
+      // chips
+      const chips = document.getElementById('bagChips');
+      chips.innerHTML = '';
+      CANDIES.forEach(c => {
+        const qty = bag[c.id] || 0;
+        if (qty > 0) {
+          const chip = document.createElement('div');
+          chip.className = 'bag-chip';
+          chip.innerHTML = `${c.emoji} ${c.name} ×${qty}`;
+          chips.appendChild(chip);
+        }
+      });
+
+      // show/hide bar
+      const bar = document.getElementById('bagBar');
+      const hasItems = Object.values(bag).some(v => v > 0);
+      bar.classList.toggle('visible', hasItems);
+    }
+
+    renderGrid();
+    updateBag();
+  </script>
+</body>
+</html>
