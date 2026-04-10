@@ -92,6 +92,13 @@
     .bag-spacer{flex:1;}
     .clear-btn{background:rgba(255,255,255,0.14);border:2px solid rgba(255,255,255,0.25);color:white;border-radius:10px;padding:7px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
     .clear-btn:active{background:rgba(255,255,255,0.25);}
+
+    .candy-fly{position:fixed;z-index:9999;pointer-events:none;width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));}
+    @keyframes flyToBag{
+      0%{transform:scale(1) rotate(0deg);opacity:1;}
+      40%{transform:scale(0.9) rotate(-15deg) translateY(-30px);opacity:1;}
+      100%{transform:scale(0.3) rotate(20deg);opacity:0;}
+    }
   </style>
 </head>
 <body>
@@ -130,12 +137,12 @@
 <div class="bag-bar" id="bagBar">
   <div><div class="bag-label">Your bag</div><div class="bag-weight" id="bagWeight">0.00 <span>lbs</span></div></div>
   <div class="bag-divider"></div>
-  <div><div class="price-big" id="bagPrice">$0.00</div><div class="price-rate">$14.99 / lb</div></div>
+  <div><div class="price-big" id="bagPrice">$0.00</div><div class="price-rate">$15.99 / lb</div></div>
   <div class="bag-spacer"></div>
   <button class="clear-btn" onclick="clearBag()">Clear</button>
 </div>
 <script>
-const PRICE_PER_LB = 14.99;
+const PRICE_PER_LB = 15.99;
 const IMG = "images/";
 
 const CANDIES = [
@@ -176,10 +183,32 @@ function buildGrid() {
         <button class="qty-btn" id="plus-${c.id}">+</button>
       </div>`;
     card.querySelector('#minus-'+c.id).addEventListener('click', e => { e.stopPropagation(); changeQty(c.id,-1); });
-    card.querySelector('#plus-'+c.id).addEventListener('click',  e => { e.stopPropagation(); changeQty(c.id,+1); });
-    card.addEventListener('click', () => changeQty(c.id, 1));
+    card.querySelector('#plus-'+c.id).addEventListener('click',  e => { e.stopPropagation(); flyCandy(card, c); changeQty(c.id,+1); });
+    card.addEventListener('click', () => { flyCandy(card, c); changeQty(c.id, 1); });
     grid.appendChild(card);
   });
+}
+
+function flyCandy(cardEl, candy) {
+  const img = cardEl.querySelector('.candy-img');
+  if (!img || !img.complete || img.naturalWidth === 0) return;
+  const rect = img.getBoundingClientRect();
+  const bar = document.getElementById('bagBar').getBoundingClientRect();
+  const fly = document.createElement('img');
+  fly.src = img.src;
+  fly.className = 'candy-fly';
+  fly.style.left = rect.left + rect.width/2 - 22 + 'px';
+  fly.style.top = rect.top + rect.height/2 - 22 + 'px';
+  const dx = bar.left + bar.width/2 - (rect.left + rect.width/2);
+  const dy = bar.top - rect.top - rect.height/2;
+  fly.style.animation = 'none';
+  document.body.appendChild(fly);
+  fly.offsetHeight; // force reflow
+  fly.style.transition = 'left 0.55s ease-in, top 0.55s cubic-bezier(0.2,-0.3,0.7,0.2)';
+  fly.style.left = rect.left + rect.width/2 - 22 + dx + 'px';
+  fly.style.top = rect.top + rect.height/2 - 22 + dy + 'px';
+  fly.style.animation = 'flyToBag 0.55s ease-in forwards';
+  fly.addEventListener('animationend', () => fly.remove());
 }
 
 function changeQty(id, delta) {
