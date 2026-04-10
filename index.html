@@ -58,7 +58,8 @@
     .candy-card.selected{border-color:var(--blue);background:var(--yellow-light);box-shadow:0 4px 14px rgba(28,63,189,0.18);}
 
     .candy-img-wrap{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
-    .candy-img{width:100%;height:100%;object-fit:contain;}
+    .candy-img{width:100%;height:100%;object-fit:contain;transition:transform 0.2s ease;}
+    .candy-card.selected .candy-img{transform:scale(1.1) rotate(-5deg);}
     .candy-emoji-fallback{font-size:36px;display:none;}
     .img-error .candy-img{display:none;}.img-error .candy-emoji-fallback{display:block;}
 
@@ -89,8 +90,40 @@
     .price-big{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--yellow);line-height:1;}
     .price-rate{font-size:9px;opacity:0.6;}
     .bag-spacer{flex:1;}
-    .clear-btn{background:rgba(255,255,255,0.14);border:2px solid rgba(255,255,255,0.25);color:white;border-radius:10px;padding:7px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
-    .clear-btn:active{background:rgba(255,255,255,0.25);}
+    .checkout-btn{background:var(--yellow);border:none;color:var(--blue);border-radius:10px;padding:7px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+    .checkout-btn:active{background:var(--yellow-light);}
+
+    .bag-icon{width:38px;height:44px;flex-shrink:0;cursor:pointer;}
+
+    /* Checkout overlay */
+    .checkout-overlay{position:fixed;inset:0;z-index:200;background:var(--yellow-bg);overflow-y:auto;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.2,0.64,1);padding:0 16px 40px;}
+    .checkout-overlay.open{transform:translateY(0);}
+    .co-header{display:flex;align-items:center;padding:16px 0;gap:12px;}
+    .co-back{background:none;border:2px solid var(--blue);color:var(--blue);border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .co-back:active{background:var(--blue);color:white;}
+    .co-title{font-family:'Fraunces',serif;font-weight:900;font-size:22px;color:var(--blue);}
+    .co-items{list-style:none;margin:0 0 20px;}
+    .co-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(28,63,189,0.1);}
+    .co-item-img{width:44px;height:44px;object-fit:contain;border-radius:8px;}
+    .co-item-name{flex:1;font-weight:600;font-size:13px;color:var(--blue);}
+    .co-item-qty{font-family:'Fraunces',serif;font-weight:900;font-size:14px;color:var(--blue);opacity:0.6;}
+    .co-total{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:2px solid var(--blue);}
+    .co-total-label{font-weight:700;font-size:13px;color:var(--blue);}
+    .co-total-price{font-family:'Fraunces',serif;font-weight:900;font-size:28px;color:var(--blue);}
+    .co-total-weight{font-size:11px;color:var(--blue);opacity:0.5;text-align:right;margin-top:2px;}
+    .co-or{text-align:center;color:var(--blue);opacity:0.4;font-size:12px;font-weight:700;margin:12px 0;}
+    .apple-pay-btn{width:100%;height:48px;background:#000;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:20px 0 0;}
+    .apple-pay-btn:active{opacity:0.8;}
+    .apple-pay-btn svg{height:22px;}
+    .card-pay-btn{width:100%;height:48px;background:var(--blue);border:none;border-radius:12px;cursor:pointer;color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .card-pay-btn:active{opacity:0.8;}
+    .co-done{text-align:center;padding:60px 20px;display:none;}
+    .co-done.show{display:block;}
+    .co-done-check{font-size:64px;margin-bottom:16px;}
+    .co-done h2{font-family:'Fraunces',serif;font-weight:900;font-size:24px;color:var(--blue);margin-bottom:8px;}
+    .co-done p{font-size:13px;color:var(--blue);opacity:0.6;line-height:1.5;}
+    .co-content{}
+    .co-content.hidden{display:none;}
 
     .candy-fly{position:fixed;z-index:9999;pointer-events:none;width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));}
     @keyframes flyToBag{
@@ -134,11 +167,44 @@
   </footer>
 </div>
 <div class="bag-bar" id="bagBar">
+  <svg class="bag-icon" onclick="if(confirm('Empty your bag?'))clearBag()" viewBox="0 0 38 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 14 C6 12 8 10 10 10 L28 10 C30 10 32 12 32 14 L30 40 C30 42 28 43 26 43 L12 43 C10 43 8 42 8 40 Z" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
+    <path d="M13 10 C13 5 15 2 19 2 C23 2 25 5 25 10" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
+    <clipPath id="bagClip"><path d="M6 14 C6 12 8 10 10 10 L28 10 C30 10 32 12 32 14 L30 40 C30 42 28 43 26 43 L12 43 C10 43 8 42 8 40 Z"/></clipPath>
+    <rect id="bagFill" x="6" y="43" width="28" height="33" rx="2" fill="var(--yellow)" opacity="0.85" clip-path="url(#bagClip)"/>
+  </svg>
   <div><div class="bag-label">Your bag</div><div class="bag-weight" id="bagWeight">0.00 <span>lbs</span></div></div>
   <div class="bag-divider"></div>
   <div><div class="price-big" id="bagPrice">$0.00</div><div class="price-rate">$15.99 / lb</div></div>
   <div class="bag-spacer"></div>
-  <button class="clear-btn" onclick="clearBag()">Clear</button>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
+<div class="checkout-overlay" id="checkoutOverlay">
+  <div class="co-header">
+    <button class="co-back" onclick="closeCheckout()">&#8592;</button>
+    <div class="co-title">Checkout</div>
+  </div>
+  <div class="co-content" id="coContent">
+    <ul class="co-items" id="coItems"></ul>
+    <div class="co-total">
+      <span class="co-total-label">Total</span>
+      <div><div class="co-total-price" id="coPrice"></div><div class="co-total-weight" id="coWeight"></div></div>
+    </div>
+    <button class="apple-pay-btn" onclick="mockPay()">
+      <svg viewBox="0 0 165 40" xmlns="http://www.w3.org/2000/svg">
+        <path fill="white" d="M37.8 6.4c1.1-1.4 1.9-3.3 1.6-5.2-1.6.1-3.5 1.1-4.6 2.4-1 1.2-1.9 3.2-1.7 5 1.8.2 3.6-.9 4.7-2.2zm1.6 2.5c-2.6-.2-4.8 1.4-6.1 1.4-1.2 0-3.1-1.4-5.1-1.3-2.6 0-5.1 1.5-6.4 3.9-2.8 4.8-.7 11.9 2 15.8 1.3 1.9 2.9 4.1 5 4 2-.1 2.8-1.3 5.2-1.3 2.4 0 3.1 1.3 5.2 1.2 2.2 0 3.5-2 4.8-3.9 1.5-2.2 2.1-4.3 2.2-4.4 0 0-4.2-1.6-4.2-6.4 0-4 3.3-5.9 3.4-6-1.8-2.7-4.7-3-5.7-3.1l-.3.1z"/>
+        <text x="50" y="29" font-family="-apple-system,system-ui,sans-serif" font-size="22" font-weight="600" fill="white">Pay</text>
+      </svg>
+    </button>
+    <div class="co-or">or</div>
+    <button class="card-pay-btn" onclick="mockPay()">Pay with card</button>
+  </div>
+  <div class="co-done" id="coDone">
+    <div class="co-done-check">&#10003;</div>
+    <h2>Order confirmed!</h2>
+    <p>Thank you for your order.<br>Your candy mix is being prepared.</p>
+    <p style="margin-top:20px;font-size:11px;opacity:0.4;font-style:italic;">This is a demo — no real payment was made and no candy will be shipped.</p>
+  </div>
 </div>
 <script>
 const PRICE_PER_LB = 15.99;
@@ -233,6 +299,39 @@ function updateBag() {
   document.getElementById('bagWeight').innerHTML = `${lbs.toFixed(2)} <span>lbs</span>`;
   document.getElementById('bagPrice').textContent = `$${price.toFixed(2)}`;
   document.getElementById('bagBar').classList.toggle('visible', Object.values(bag).some(v=>v>0));
+  // Fill bag icon: logarithmic curve, half full at ~0.5kg (16oz), never completely full
+  const fill = 0.9 * (1 - Math.exp(-oz / 20));
+  const fillEl = document.getElementById('bagFill');
+  fillEl.setAttribute('y', 43 - fill * 33);
+}
+
+function checkout() {
+  const list = document.getElementById('coItems');
+  list.innerHTML = '';
+  let oz = 0;
+  CANDIES.filter(c => bag[c.id] > 0).forEach(c => {
+    oz += bag[c.id] * c.oz;
+    const li = document.createElement('li');
+    li.className = 'co-item';
+    li.innerHTML = `<img class="co-item-img" src="${c.img}" alt="${c.name}"/><span class="co-item-name">${c.name}</span><span class="co-item-qty">${bag[c.id]}×</span>`;
+    list.appendChild(li);
+  });
+  const lbs = oz/16, price = lbs * PRICE_PER_LB;
+  document.getElementById('coPrice').textContent = `$${price.toFixed(2)}`;
+  document.getElementById('coWeight').textContent = `${lbs.toFixed(2)} lbs`;
+  document.getElementById('coContent').classList.remove('hidden');
+  document.getElementById('coDone').classList.remove('show');
+  document.getElementById('checkoutOverlay').classList.add('open');
+}
+
+function closeCheckout() {
+  document.getElementById('checkoutOverlay').classList.remove('open');
+}
+
+function mockPay() {
+  document.getElementById('coContent').classList.add('hidden');
+  document.getElementById('coDone').classList.add('show');
+  setTimeout(() => { closeCheckout(); clearBag(); }, 2500);
 }
 
 buildGrid();
