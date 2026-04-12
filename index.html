@@ -171,8 +171,13 @@
 
     .candy-fly{position:fixed;z-index:9999;pointer-events:none;width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));}
 
+    /* Surprise & Favorite buttons row */
+    .action-row{display:flex;gap:8px;margin-bottom:12px;}
+    .surprise-btn{flex:1;background:white;border:2px solid var(--blue);color:var(--blue);border-radius:14px;padding:11px 16px;font-family:'Fraunces',serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .surprise-btn:active{background:var(--yellow-light);}
+
     /* Favorite */
-    .fav-load-btn{width:100%;background:white;border:2px solid var(--blue);color:var(--blue);border-radius:14px;padding:11px 16px;font-family:'Fraunces',serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .fav-load-btn{flex:1;background:white;border:2px solid var(--blue);color:var(--blue);border-radius:14px;padding:11px 16px;font-family:'Fraunces',serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;}
     .fav-load-btn:active{background:var(--yellow-light);}
 
     .co-fav-row{margin-top:14px;}
@@ -228,8 +233,9 @@
     <div class="step"><span class="step-num">3</span><span class="step-label">Weighed at checkout</span></div>
   </div>
   <p class="section-title">Build Your Mix</p>
-  <div id="favLoadBar" style="display:none;margin-bottom:12px;">
-    <button class="fav-load-btn" onclick="loadFavorite()">⭐ Load my favorite bag</button>
+  <div class="action-row">
+    <button class="surprise-btn" onclick="surpriseMe()">🎲 Surprise me!</button>
+    <button class="fav-load-btn" id="favLoadBtn" style="display:none" onclick="loadFavorite()">⭐ Load favorite</button>
   </div>
   <div class="candy-grid" id="candyGrid"></div>
   <div class="natural-banner">
@@ -637,7 +643,7 @@ function showToast(msg) {
 
 function updateFavLoadBar() {
   const saved = localStorage.getItem(FAV_KEY);
-  document.getElementById('favLoadBar').style.display = saved ? 'block' : 'none';
+  document.getElementById('favLoadBtn').style.display = saved ? 'flex' : 'none';
 }
 
 function loadFavorite() {
@@ -656,6 +662,23 @@ function loadFavorite() {
   });
   updateBag();
   showToast('Favorite bag loaded!');
+}
+
+function surpriseMe() {
+  clearCurrentMix();
+  // Pick 5-8 random candy types
+  const shuffled = [...CANDIES].sort(() => Math.random() - 0.5);
+  const count = 5 + Math.floor(Math.random() * 4);
+  const picks = shuffled.slice(0, count);
+  // Give each 2-5 pieces, aiming for roughly 0.5-0.8 lbs total
+  picks.forEach(c => {
+    const qty = 2 + Math.floor(Math.random() * 4);
+    bag[c.id] = qty;
+    document.getElementById('qty-' + c.id).textContent = qty;
+    document.getElementById('card-' + c.id).classList.add('selected');
+  });
+  updateBag();
+  showToast('Here\u2019s your surprise mix!');
 }
 
 buildGrid();
