@@ -285,7 +285,13 @@
       <div class="co-body-inner">
         <div class="co-card">
           <div class="co-card-title" id="coCardTitle" style="display:flex;align-items:center;justify-content:space-between;">Your mix</div>
+          <button class="co-add-bag" onclick="addAnotherBag()">+ Add another bag</button>
           <ul class="co-items" id="coItems"></ul>
+          <div class="co-fav-row" id="coFavRow">
+            <button class="co-fav-btn" id="coFavBtn" onclick="saveFavorite()">
+              <span id="coFavIcon">⭐</span> Save as favorite bag
+            </button>
+          </div>
           <div class="co-summary">
             <div class="co-line"><span class="co-line-label">Subtotal</span><span class="co-line-value" id="coSubtotal"></span></div>
             <div class="co-line"><span class="co-line-label">Shipping</span><span class="co-line-value" id="coShipping"></span></div>
@@ -295,12 +301,6 @@
               <div><div class="co-total-price" id="coPrice"></div><div class="co-total-weight" id="coWeight"></div></div>
             </div>
           </div>
-          <div class="co-fav-row" id="coFavRow">
-            <button class="co-fav-btn" id="coFavBtn" onclick="saveFavorite()">
-              <span id="coFavIcon">⭐</span> Save as favorite bag
-            </button>
-          </div>
-          <button class="co-add-bag" onclick="addAnotherBag()">+ Add another bag</button>
         </div>
         <div class="co-pay">
           <button class="apple-pay-btn" onclick="mockPay()">
