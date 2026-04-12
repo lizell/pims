@@ -195,7 +195,7 @@
     .co-bag-remove:hover{opacity:0.6;}
     .co-bag-edit{background:white;border:2px solid var(--blue);color:var(--blue);border-radius:999px;padding:5px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:transform 0.12s,background 0.12s;}
     .co-bag-edit:active{transform:scale(0.94);background:var(--yellow-light);}
-    .co-add-bag{width:100%;background:transparent;border:2px dashed rgba(28,63,189,0.25);color:var(--blue);border-radius:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:background 0.15s,border-color 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;}
+    .co-add-bag{width:100%;background:transparent;border:2px dashed rgba(28,63,189,0.25);color:var(--blue);border-radius:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:background 0.15s,border-color 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;margin-bottom:22px;}
     .co-add-bag:active{background:var(--yellow-light);}
     .bag-count-badge{background:var(--yellow);color:var(--blue);border-radius:50%;width:18px;height:18px;font-family:'Fraunces',serif;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;position:absolute;top:-4px;right:-6px;}
     .bag-icon-wrap{position:relative;flex-shrink:0;cursor:pointer;}
@@ -287,11 +287,6 @@
           <div class="co-card-title" id="coCardTitle" style="display:flex;align-items:center;justify-content:space-between;">Your mix</div>
           <button class="co-add-bag" onclick="addAnotherBag()">+ Add another bag</button>
           <ul class="co-items" id="coItems"></ul>
-          <div class="co-fav-row" id="coFavRow">
-            <button class="co-fav-btn" id="coFavBtn" onclick="saveFavorite()">
-              <span id="coFavIcon">⭐</span> Save as favorite bag
-            </button>
-          </div>
           <div class="co-summary">
             <div class="co-line"><span class="co-line-label">Subtotal</span><span class="co-line-value" id="coSubtotal"></span></div>
             <div class="co-line"><span class="co-line-label">Shipping</span><span class="co-line-value" id="coShipping"></span></div>
@@ -542,6 +537,24 @@ function renderCheckout() {
       items.appendChild(li);
     });
     group.appendChild(items);
+
+    // Save as favorite — one per bag
+    const favRow = document.createElement('div');
+    favRow.className = 'co-fav-row';
+    const favBtn = document.createElement('button');
+    favBtn.className = 'co-fav-btn';
+    favBtn.innerHTML = '⭐ Save as favorite bag';
+    favBtn.onclick = () => {
+      localStorage.setItem(FAV_KEY, JSON.stringify(entry.mix));
+      favBtn.classList.add('saved');
+      favBtn.innerHTML = '✅ Saved as favorite!';
+      favBtn.disabled = true;
+      updateFavLoadBar();
+      showToast('⭐ Favorite bag saved!');
+    };
+    favRow.appendChild(favBtn);
+    group.appendChild(favRow);
+
     list.appendChild(group);
   });
 
@@ -556,12 +569,6 @@ function renderCheckout() {
   document.getElementById('coTax').textContent = `$${tax.toFixed(2)}`;
   document.getElementById('coPrice').textContent = `$${total.toFixed(2)}`;
   document.getElementById('coWeight').textContent = `${totalLbs.toFixed(2)} lbs — ${totalBags} bag${totalBags > 1 ? 's' : ''}`;
-
-  // Reset fav button
-  const favBtn = document.getElementById('coFavBtn');
-  favBtn.classList.remove('saved');
-  favBtn.disabled = false;
-  favBtn.innerHTML = '<span>⭐</span> Save as favorite bag';
 }
 
 let lastCartChange = 0;
@@ -631,21 +638,6 @@ function showToast(msg) {
 function updateFavLoadBar() {
   const saved = localStorage.getItem(FAV_KEY);
   document.getElementById('favLoadBar').style.display = saved ? 'block' : 'none';
-}
-
-function saveFavorite() {
-  // Save the first bag in cart as favorite
-  if (cart.length === 0) return;
-  const mix = cart[0].mix;
-  const items = Object.entries(mix).filter(([,v]) => v > 0);
-  if (!items.length) return;
-  localStorage.setItem(FAV_KEY, JSON.stringify(Object.fromEntries(items)));
-  const btn = document.getElementById('coFavBtn');
-  btn.classList.add('saved');
-  btn.innerHTML = '✅ Saved as favorite!';
-  btn.disabled = true;
-  updateFavLoadBar();
-  showToast('Favorite bag saved!');
 }
 
 function loadFavorite() {
