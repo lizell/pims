@@ -43,7 +43,7 @@
     .step-label{font-size:10px;font-weight:600;color:var(--blue);opacity:0.65;text-align:center;line-height:1.3;max-width:72px;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-    .section-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(17px,5vw,24px);color:var(--blue);margin-bottom:12px;text-align:center;}
+    .section-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(17px,5vw,24px);color:var(--blue);margin-bottom:12px;text-align:center;animation:fadeUp 0.7s ease 0.22s both;}
 
     .candy-grid{
       display:grid;
@@ -171,8 +171,25 @@
 
     .candy-fly{position:fixed;z-index:9999;pointer-events:none;width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));}
 
+    /* Celebrity Mixes */
+    .celeb-section{margin:0 -12px 28px;animation:fadeUp 0.7s ease 0.2s both;}
+    .celeb-header{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;padding:0 12px;}
+    .celeb-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(15px,4vw,19px);color:var(--blue);}
+    .celeb-subtitle{font-size:clamp(10px,2.5vw,12px);color:var(--blue);opacity:0.4;font-weight:500;}
+    .celeb-scroll{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 12px 12px;scrollbar-width:none;}
+    .celeb-scroll::-webkit-scrollbar{display:none;}
+    .celeb-card{flex:0 0 auto;width:120px;scroll-snap-align:start;background:#E8C84A;border-radius:18px;padding:20px 16px 22px;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.15s,box-shadow 0.15s;user-select:none;box-shadow:0 3px 12px rgba(0,0,0,0.1);text-align:center;display:flex;flex-direction:column;align-items:center;}
+    .celeb-card:active{transform:scale(0.96);}
+    /* Cloud shapes */
+    .celeb-card::before{content:'';position:absolute;top:12%;left:-10%;width:70px;height:30px;background:rgba(255,255,255,0.25);border-radius:50%;box-shadow:20px -12px 0 8px rgba(255,255,255,0.25), 40px -4px 0 4px rgba(255,255,255,0.2);pointer-events:none;}
+    .celeb-card::after{content:'';position:absolute;bottom:20%;right:-8%;width:60px;height:25px;background:rgba(255,255,255,0.2);border-radius:50%;box-shadow:-18px -10px 0 6px rgba(255,255,255,0.2), -36px -3px 0 3px rgba(255,255,255,0.15);pointer-events:none;}
+    .celeb-logo{width:72px;height:auto;margin-bottom:8px;position:relative;z-index:1;}
+    .celeb-by{font-size:11px;color:var(--blue);font-weight:500;opacity:0.5;margin-bottom:2px;position:relative;z-index:1;}
+    .celeb-name{font-family:'Fraunces',serif;font-weight:900;font-size:19px;color:var(--blue);line-height:1.1;position:relative;z-index:1;margin-bottom:8px;}
+    .celeb-vibe{font-size:9px;color:var(--blue);font-weight:700;opacity:0.45;letter-spacing:0.04em;position:relative;z-index:1;text-transform:uppercase;}
+
     /* Surprise & Favorite buttons row */
-    .action-row{display:flex;gap:8px;margin-bottom:12px;}
+    .action-row{display:flex;gap:8px;margin-bottom:12px;animation:fadeUp 0.7s ease 0.25s both;}
     .surprise-btn{flex:1;background:white;border:2px solid var(--blue);color:var(--blue);border-radius:14px;padding:11px 16px;font-family:'Fraunces',serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;}
     .surprise-btn:active{background:var(--yellow-light);}
 
@@ -180,28 +197,30 @@
     .fav-load-btn{flex:1;background:white;border:2px solid var(--blue);color:var(--blue);border-radius:14px;padding:11px 16px;font-family:'Fraunces',serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;}
     .fav-load-btn:active{background:var(--yellow-light);}
 
-    .co-fav-row{margin-top:14px;}
-    .co-fav-btn{width:100%;background:transparent;border:2px dashed rgba(28,63,189,0.25);color:var(--blue);border-radius:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:background 0.15s,border-color 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;}
-    .co-fav-btn:active{background:var(--yellow-light);}
-    .co-fav-btn.saved{border-color:var(--blue);background:var(--yellow-light);color:var(--blue);}
 
     /* Toast */
     .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--blue);color:white;border-radius:999px;padding:9px 20px;font-size:13px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.22s,transform 0.22s;z-index:400;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
     /* Multi-bag checkout */
-    .co-bag-group{margin-bottom:18px;}
+    .co-bag-group{margin-bottom:14px;background:rgba(249,232,127,0.18);border-radius:16px;padding:14px 16px;border:1px solid rgba(249,232,127,0.3);}
     .co-card{background:white;border-radius:24px;padding:24px;box-shadow:0 4px 24px rgba(28,63,189,0.1),0 1px 3px rgba(28,63,189,0.06);margin-top:-20px;position:relative;z-index:2;overflow:hidden;}
-    .co-card-title{font-family:'Fraunces',serif;font-weight:700;font-size:14px;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;min-width:0;}
-    .co-bag-qty{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:nowrap;}
-    .co-bag-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;min-width:0;}
-    .co-bag-label{font-family:'Fraunces',serif;font-weight:900;font-size:13px;color:var(--blue);opacity:0.5;text-transform:uppercase;letter-spacing:0.08em;}height:32px;border:2px solid var(--blue);background:white;color:var(--blue);border-radius:50%;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.12s,background 0.12s;line-height:1;}
-    .co-bag-qty-btn:active{transform:scale(0.9);background:var(--yellow-light);}
-    .co-bag-qty-num{font-family:'Fraunces',serif;font-weight:900;font-size:18px;color:var(--blue);min-width:24px;text-align:center;}
-    .co-bag-remove{background:none;border:none;color:var(--blue);opacity:0.3;font-size:18px;cursor:pointer;padding:0 4px;transition:opacity 0.15s;}
-    .co-bag-remove:hover{opacity:0.6;}
-    .co-bag-edit{background:white;border:2px solid var(--blue);color:var(--blue);border-radius:999px;padding:5px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:transform 0.12s,background 0.12s;}
-    .co-bag-edit:active{transform:scale(0.94);background:var(--yellow-light);}
-    .co-add-bag{width:100%;background:transparent;border:2px dashed rgba(28,63,189,0.25);color:var(--blue);border-radius:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:background 0.15s,border-color 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;margin-bottom:22px;}
+    .co-card-title{font-family:'Fraunces',serif;font-weight:700;font-size:14px;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+    .co-bag-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px;gap:8px;min-width:0;}
+    @media(max-width:479px){.co-bag-header{flex-direction:column;align-items:flex-start;}}
+    .co-bag-label{font-family:'Fraunces',serif;font-weight:900;font-size:14px;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0;}
+    .co-bag-qty{display:flex;align-items:center;gap:6px;flex:1;flex-wrap:wrap;justify-content:flex-end;}
+    .co-bag-qty-stepper{display:flex;align-items:center;gap:4px;}
+    .co-bag-edit{background:rgba(28,63,189,0.08);border:none;color:var(--blue);border-radius:999px;padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:transform 0.12s,background 0.12s;}
+    .co-bag-edit:active{transform:scale(0.94);background:rgba(28,63,189,0.15);}
+    .co-bag-fav{background:rgba(28,63,189,0.08);border:none;color:var(--blue);border-radius:999px;padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:transform 0.12s,background 0.12s;}
+    .co-bag-fav:active{transform:scale(0.94);background:rgba(28,63,189,0.15);}
+    .co-bag-fav.saved{background:var(--yellow-light);pointer-events:none;}
+    .co-bag-remove{background:none;border:none;color:var(--blue);opacity:0.55;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;padding:4px 2px;transition:opacity 0.15s;text-decoration:underline;text-underline-offset:2px;}
+    .co-bag-remove:hover,.co-bag-remove:active{opacity:0.8;}
+    .co-bag-qty-btn{width:28px;height:28px;border:1.5px solid rgba(28,63,189,0.25);background:white;color:var(--blue);border-radius:50%;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.12s,border-color 0.12s;line-height:1;padding:0;}
+    .co-bag-qty-btn:active{background:var(--yellow-light);border-color:var(--blue);}
+    .co-bag-qty-num{font-family:'Fraunces',serif;font-weight:900;font-size:15px;color:var(--blue);min-width:20px;text-align:center;}
+    .co-add-bag{width:100%;background:transparent;border:2px dashed rgba(28,63,189,0.25);color:var(--blue);border-radius:14px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:background 0.15s,border-color 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:18px;}
     .co-add-bag:active{background:var(--yellow-light);}
     .bag-count-badge{background:var(--yellow);color:var(--blue);border-radius:50%;width:18px;height:18px;font-family:'Fraunces',serif;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;position:absolute;top:-4px;right:-6px;}
     .bag-icon-wrap{position:relative;flex-shrink:0;cursor:pointer;}
@@ -233,6 +252,15 @@
     <div class="step"><span class="step-num">2</span><span class="step-label">Choose your mix</span></div>
     <div class="step"><span class="step-num">3</span><span class="step-label">Weighed at checkout</span></div>
   </div>
+
+  <div class="celeb-section">
+    <div class="celeb-header">
+      <span class="celeb-title">Celebrity Picks</span>
+      <span class="celeb-subtitle">Swipe for inspo</span>
+    </div>
+    <div class="celeb-scroll" id="celebScroll"></div>
+  </div>
+
   <p class="section-title">Build Your Mix</p>
   <div class="action-row">
     <button class="surprise-btn" onclick="surpriseMe()">🎲 Surprise me!</button>
@@ -291,8 +319,8 @@
     <div class="co-body">
       <div class="co-body-inner">
         <div class="co-card">
-          <div class="co-card-title" id="coCardTitle" style="display:flex;align-items:center;justify-content:space-between;">Your mix</div>
           <button class="co-add-bag" onclick="addAnotherBag()">+ Add another bag</button>
+          <div class="co-card-title" id="coCardTitle">Your mix</div>
           <ul class="co-items" id="coItems"></ul>
           <div class="co-summary">
             <div class="co-line"><span class="co-line-label">Subtotal</span><span class="co-line-value" id="coSubtotal"></span></div>
@@ -358,10 +386,49 @@ const CANDIES = [
   {id:12, name:"Tutti Frutti Diamonds",    emoji:"💎", img:IMG+"tutti-frutti-diamonds.webp", badges:[{cls:"badge-free",label:"Gelatin free"},{cls:"badge-vegan",label:"Vegan"}], oz:0.25},
 ];
 
+const CELEB_MIXES = [
+  { name:"Billie Eilish",    vibe:"Sour & Bold",       mix:{1:4, 6:5, 7:3, 2:4, 12:3} },
+  { name:"Ariana Grande",    vibe:"Sweet & Dreamy",     mix:{3:4, 4:3, 10:5, 11:3, 9:4} },
+  { name:"Jennifer Lopez",   vibe:"Classic & Luxe",     mix:{3:3, 5:4, 8:5, 4:3, 11:3} },
+  { name:"Serena Williams",  vibe:"Power Mix",          mix:{1:3, 8:4, 9:5, 12:4, 6:3} },
+  { name:"John Travolta",    vibe:"Retro Favorites",    mix:{5:5, 3:4, 8:3, 4:4, 10:3} },
+];
+
+function buildCelebCards() {
+  const scroll = document.getElementById('celebScroll');
+  CELEB_MIXES.forEach((celeb, i) => {
+    const card = document.createElement('div');
+    card.className = 'celeb-card';
+    card.innerHTML = `
+      <img class="celeb-logo" src="images/pims-logo.png" alt="Pim's Pick 'N' Mix" />
+      <div class="celeb-by">- by -</div>
+      <div class="celeb-name">${celeb.name}</div>
+      <div class="celeb-vibe">${celeb.vibe}</div>`;
+    card.addEventListener('click', () => loadCelebMix(i));
+    scroll.appendChild(card);
+  });
+}
+
+function loadCelebMix(idx) {
+  const celeb = CELEB_MIXES[idx];
+  clearCurrentMix();
+  currentCelebName = celeb.name;
+  Object.entries(celeb.mix).forEach(([id, qty]) => {
+    bag[id] = qty;
+    document.getElementById('qty-' + id).textContent = qty;
+    document.getElementById('card-' + id).classList.add('selected');
+  });
+  updateBag();
+  showToast(`${celeb.name}'s mix loaded!`);
+  // Scroll to candy grid
+  document.getElementById('candyGrid').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
 // ── DATA MODEL ──
 // Current bag being built (candy picker state)
 const bag = {};
-// Cart: array of { mix: {candyId: qty, ...}, qty: number }
+let currentCelebName = null; // tracks if current mix is an unmodified celebrity mix
+// Cart: array of { mix: {candyId: qty, ...}, qty: number, celebName?: string }
 let cart = [];
 
 function buildGrid() {
@@ -419,12 +486,14 @@ function changeQty(id, delta) {
   if (now - lastChange < 80) return;
   lastChange = now;
   bag[id] = Math.max(0, (bag[id]||0) + delta);
+  currentCelebName = null;
   document.getElementById('qty-'+id).textContent = bag[id];
   document.getElementById('card-'+id).classList.toggle('selected', bag[id] > 0);
   updateBag();
 }
 
 function clearCurrentMix() {
+  currentCelebName = null;
   CANDIES.forEach(c => {
     bag[c.id] = 0;
     document.getElementById('qty-'+c.id).textContent = '0';
@@ -481,7 +550,7 @@ function saveMixToCart() {
   if (!currentMixHasItems()) return;
   const mix = {};
   Object.entries(bag).forEach(([id, qty]) => { if (qty > 0) mix[id] = qty; });
-  cart.push({ mix, qty: 1 });
+  cart.push({ mix, qty: 1, celebName: currentCelebName || null });
   clearCurrentMix();
   updateBag();
 }
@@ -502,36 +571,29 @@ function renderCheckout() {
   let totalOz = 0;
   const cardTitle = document.querySelector('.co-card-title');
 
-  if (cart.length === 1) {
-    cardTitle.innerHTML = `<span>Your mix</span>
-      <div class="co-bag-qty">
-        <button class="co-bag-edit" onclick="editCartBag(0)">Edit</button>
-        <button class="co-bag-qty-btn" onclick="changeCartQty(0,-1)">−</button>
-        <span class="co-bag-qty-num">${cart[0].qty}×</span>
-        <button class="co-bag-qty-btn" onclick="changeCartQty(0,+1)">+</button>
-      </div>`;
-  } else {
-    cardTitle.innerHTML = 'Your bags';
-  }
+  cardTitle.textContent = cart.length > 1 ? 'Your bags' : '';
+  cardTitle.style.display = cart.length > 1 ? '' : 'none';
 
   cart.forEach((entry, idx) => {
     const group = document.createElement('div');
     group.className = 'co-bag-group';
 
-    if (cart.length > 1) {
-      const header = document.createElement('div');
-      header.className = 'co-bag-header';
-      header.innerHTML = `
-        <span class="co-bag-label">Bag ${idx + 1}</span>
-        <div class="co-bag-qty">
-          <button class="co-bag-edit" onclick="editCartBag(${idx})">Edit</button>
-          <button class="co-bag-remove" onclick="removeCartBag(${idx})" title="Remove bag">&times;</button>
+    const header = document.createElement('div');
+    header.className = 'co-bag-header';
+    const label = entry.celebName ? entry.celebName + '\'s mix' : (cart.length > 1 ? 'Bag ' + (idx + 1) : 'Your mix');
+    header.innerHTML = `
+      <span class="co-bag-label">${label}</span>
+      <div class="co-bag-qty">
+        <button class="co-bag-edit" onclick="editCartBag(${idx})">Edit</button>
+        <button class="co-bag-fav" id="co-fav-${idx}" onclick="saveFavFromToolbar(${idx},this)">Save</button>
+        ${cart.length > 1 ? `<button class="co-bag-remove" onclick="removeCartBag(${idx})">Remove</button>` : ''}
+        <div class="co-bag-qty-stepper">
           <button class="co-bag-qty-btn" onclick="changeCartQty(${idx},-1)">−</button>
           <span class="co-bag-qty-num">${entry.qty}×</span>
           <button class="co-bag-qty-btn" onclick="changeCartQty(${idx},+1)">+</button>
-        </div>`;
-      group.appendChild(header);
-    }
+        </div>
+      </div>`;
+    group.appendChild(header);
 
     // Candy items
     const items = document.createElement('ul');
@@ -544,23 +606,6 @@ function renderCheckout() {
       items.appendChild(li);
     });
     group.appendChild(items);
-
-    // Save as favorite — one per bag
-    const favRow = document.createElement('div');
-    favRow.className = 'co-fav-row';
-    const favBtn = document.createElement('button');
-    favBtn.className = 'co-fav-btn';
-    favBtn.innerHTML = '⭐ Save as favorite bag';
-    favBtn.onclick = () => {
-      localStorage.setItem(FAV_KEY, JSON.stringify(entry.mix));
-      favBtn.classList.add('saved');
-      favBtn.innerHTML = '✅ Saved as favorite!';
-      favBtn.disabled = true;
-      updateFavLoadBar();
-      showToast('⭐ Favorite bag saved!');
-    };
-    favRow.appendChild(favBtn);
-    group.appendChild(favRow);
 
     list.appendChild(group);
   });
@@ -603,6 +648,7 @@ function editCartBag(idx) {
   // Load this bag's mix into the picker
   clearCurrentMix();
   const entry = cart[idx];
+  currentCelebName = entry.celebName || null;
   Object.entries(entry.mix).forEach(([id, qty]) => {
     bag[id] = qty;
     const el = document.getElementById('qty-' + id);
@@ -633,6 +679,15 @@ function mockPay() {
 
 // ── FAVORITE BAG ──
 const FAV_KEY = 'pims_favorite_bag';
+
+function saveFavFromToolbar(idx, btn) {
+  const entry = cart[idx];
+  localStorage.setItem(FAV_KEY, JSON.stringify(entry.mix));
+  btn.classList.add('saved');
+  btn.textContent = 'Saved!';
+  updateFavLoadBar();
+  showToast('⭐ Favorite bag saved!');
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -683,6 +738,7 @@ function surpriseMe() {
 }
 
 buildGrid();
+buildCelebCards();
 updateFavLoadBar();
 </script>
 </body>
